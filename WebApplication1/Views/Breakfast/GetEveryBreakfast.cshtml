@@ -1,0 +1,114 @@
+﻿
+
+@{
+    ViewData["Title"] = "Get Every Breakfest";
+}
+
+<h1>GetAllBreakfast</h1>
+
+<div class="k-button-group" style="margin-bottom: 10px">
+    
+</div>
+
+
+<div>
+    
+    <p>
+        <button id="primaryTextButton"><a style="text-decoration:none; color:black" href="@Url.Action("CreateBreakfast", "Breakfast")" class="k-button-text">Create New</a></button>
+    </p>
+</div>
+
+<div id="example">
+    <div id="grid"></div>
+    <script>
+
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "https://localhost:7271/Breakfast/GetAllBreakfast",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "https://localhost:7271/Breakfast/DeleteBreakfast"
+                  
+                    }
+                },
+                schema: {
+                    model: {
+                        fields: {
+                            id: { type: "guid" },
+                            name: { type: "string" },
+                            description: { type: "string" },
+                            startDateTime: {
+                                type: "date"},
+                                endDateTime: {
+                                    type: "date"},
+                                    lastModifiedDateTime: {
+                                        type: "date"}
+                        }
+                    },
+                },
+                pageSize: 20,
+                clientPaging: true,
+                clientFiltering: true,
+                clientSorting: true
+            });
+            console.log(dataSource);
+            console.log("ana hon");
+            $("#primaryTextButton").kendoButton({
+                themeColor: "primary"
+            });
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                height: 550,
+                filterable: true,
+                sortable: true,
+                pageable: true,
+                columns: [
+                    { field: "id", title: "Breakfast ID", filterable: false },
+                    { field: "name", title: "Name"},
+                    { field: "description", title: "Description" },
+                    { field: "startDateTime", title: "Start Time", format: "{0:MM/dd/yyyy HH:mm:ss}" },
+                    { field: "endDateTime", title: "End Time", format: "{0:MM/dd/yyyy HH:mm:ss}" },
+                    { field: "lastModifiedDateTime", title: "Last Modified", format: "{0:MM/dd/yyyy HH:mm:ss}" },
+                    {
+                        command: [
+                            {
+                                name: "Edit",
+                                text: "Edit",
+                                click: function (e) {
+                                    e.preventDefault();
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    window.location.href = '@Url.Action("EditBreakfast", "Home")/' + dataItem.id;
+                                }
+                            },
+                            {
+                                name: "Delete",
+                                text: "Delete",
+                                click: function (e) {
+                                    e.preventDefault();
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    if (confirm("Are you sure you want to delete this item?")) {
+                                        window.location.href = '@Url.Action("DeleteBreakfast", "Home")/' + dataItem.id;
+                                    }
+                                }
+                            },
+                            {
+                                name: "Details",
+                                text: "Details",
+                                click: function (e) {
+                                    e.preventDefault();
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    window.location.href = '@Url.Action("GetBreakfast", "Home")/' + dataItem.id;
+                                }
+                            }
+                        ],
+                        title:"&nbsp",
+                        width: "240px"
+                    }
+                ]
+            });
+        });
+    </script>
+</div>

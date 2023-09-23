@@ -1,0 +1,69 @@
+﻿@* For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860 *@
+@{
+}
+@model BurberBreakfast.Models.Breakfast
+<h1>Edit Breakfast</h1>
+
+<div id="example">
+    <div class="demo-section">
+        <div id="validation-success"></div>
+
+        <form id="exampleForm" method="POST" asp-action="EditBreakfast"></form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var validationSuccess = $("#validation-success");
+
+            var url = new URL(window.location.href);
+            var itemId = url.pathname.split("/").pop(); // Get the last segment of the URL
+
+            // Fetch the data and populate the form
+            fetch("https://localhost:7271/EditBreakfast" + encodeURIComponent(itemId))
+               
+                .then(data => {
+                    console.log(data);
+                    
+                    
+                    // Rest of your code
+                    $("#exampleForm").kendoForm({
+                        validatable: {
+                            validateOnBlur: true,
+                            validationSummary: true,
+                            errorTemplate: "<span class='k-form-error'>#:message#</span>"
+                        },
+                        formData :{
+                            name: data.name,
+                            description: data.description,
+                            startDateTime: data.startDateTime,
+                            endDateTime: data.endDateTime
+                        },
+                        items: [{
+                            type: "group",
+                            label: "Breakfast Information",
+                            items: [
+                                { field: "name", label: "Name:", validation: { required: { message: "Fill in Name" } } },
+                                { field: "description", label: "Description:", validation: { required: { message: "Fill in Description" } }, hint: "Hint: enter alphanumeric characters only." },
+                                { field: "startDateTime", label: { text: "Start Date:" }, validation: { required: true }, },
+                                { field: "endDateTime", label: { text: "End Date:" }, validation: { required: true }, },
+                            ]
+                        }],
+                        validateField: function (e) {
+                            validationSuccess.html("");
+                        },
+                        submit: function (e) {
+                            if ($(e.form).valid()) {
+                                e.form.submit(); // Trigger the form submission
+                            } else {
+                                console.log(e);
+                                validationSuccess.html("<div class='k-messagebox k-messagebox-failed'>Form data is invalid!</div>");
+                            }
+                        },
+                        clear: function (ev) {
+                            validationSuccess.html("");
+                        }
+                    });
+                });
+        });
+    </script>
+</div>

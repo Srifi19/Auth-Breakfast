@@ -1,0 +1,80 @@
+﻿@model BurberBreakfast.Models.Breakfast
+
+@{
+    ViewData["Title"] = "CreateBreakfast";
+}
+
+<div id="example">
+    <div class="demo-section">
+        <div id="validation-success"></div>
+
+        <form id="exampleform" asp-action="CreateBreakfast" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        </form>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var validationSuccess = $("#validation-success");
+
+            $("#exampleform").kendoForm({
+                orientation: "vertical",
+                formData: {
+                    name: "Spaghetti",
+                    description: "Fine Noodles",
+                    startDateTime: new Date(),
+                    endDateTime: new Date(),
+                    Agree: false
+                },
+                items: [{
+                    type: "group",
+                    label: "Registration Form",
+                    items: [
+                        { field: "name", label: "Name:", validation: { required: true } },
+                        { field: "description", label: "Description:", validation: { required: true} },
+                   
+                        {
+    field: "startDateTime",
+    label: { text: "Start Date Time:", required: true },
+    editor: function (container, options) {
+        $('<input type="datetime-local" id="startDateTime" name="' + options.field + '" required="required" aria-labelledby="startDateTime-form-label" data-bind="value: ' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDateTimePicker({
+                format: "yyyy-MM-ddTHH:mm:ss"  // Adjust the desired datetime format
+            });
+    }
+},
+{
+    field: "endDateTime",
+    label: { text: "End Date Time:", required: true },
+    editor: function (container, options) {
+        $('<input type="datetime-local" id="endDateTime" name="' + options.field + '" required="required" aria-labelledby="endDateTime-form-label" data-bind="value: ' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDateTimePicker({
+                format: "yyyy-MM-ddTHH:mm:ss"  // Adjust the desired datetime format
+            });
+    }
+},
+                       
+                    ]
+                }],
+                validateField: function (e) {
+                    validationSuccess.html("");
+                },
+                submit: function (e) {
+                    e.preventDefault();
+                    if($(e.form).valid()){
+                        e.form.submit(); // Trigger the form submission
+                    }else{
+                        console.log(e);
+                        validationSuccess.html("<div class='k-messagebox k-messagebox-failed'>Form data is invalid!</div>");
+                    }
+                },
+                clear: function (ev) {
+                    validationSuccess.html("");
+                }
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,75 @@
+﻿@using Newtonsoft.Json
+@using WebApplication1.Models.DTOs
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h3>Claims for @User.Identity.Name:</h3>
+    <ul>
+        @foreach (var claim in User.Claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul>
+}
+else
+{
+    <p>User is not authenticated.</p>
+}
+<div id="example">
+    <div id="grid"></div>
+    <script>
+
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                    
+                transport: {
+                    read: {
+                        url: "https://localhost:7271/User/GetAllUsers",
+                        dataType: "json"
+                    }
+                },
+                    
+                schema: {
+                    model: {
+                        fields: {
+                            id: { type: "String" },
+                            username: { type: "String" },
+                            email: { type: "string" }
+                           
+                        }
+                    },
+                },
+                pageSize: 20,
+                clientPaging: true,
+                clientFiltering: true,
+                clientSorting: true
+            });
+            console.log(dataSource);
+            console.log("ana hon");
+            $("#primaryTextButton").kendoButton({
+                themeColor: "primary"
+            });
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                height: 550,
+                filterable: true,
+                sortable: true,
+                pageable: true,
+                columns: [
+                    { field: "id", title: "ID", filterable: false },
+                    { field: "username", title: "Username" },
+                    { field: "email", title: "Email" }
+                    
+                    
+                ]
+            });
+        });
+    </script>
+</div>

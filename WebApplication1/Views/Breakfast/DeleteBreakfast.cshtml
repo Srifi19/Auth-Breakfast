@@ -1,0 +1,10 @@
+﻿@model BurberBreakfast.Models.Breakfast
+
+<h1>Delete Breakfast</h1>
+<p>Are you sure you want to delete the breakfast with ID @Model.Id and Name @Model.Name?</p>
+<form method="post" asp-action="DeleteBreakfast">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" />
+    <a asp-action="GetAllBreakfast">Cancel</a>
+</form>
